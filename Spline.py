@@ -1,40 +1,41 @@
+import numpy as np
 class Spline(object):
 
     def __init__(self,uk,d):
         """ 
-        :param array.float uk: 
-        :param array.float d:
-        :raises TypeError: if uk is not an array of floats
-        :raises TypeError: if d is not an array of floats
+        :param np.array.float uk: 
+        :param np.array.float d:
+        :raises TypeError: if uk is not an np.array of floats
+        :raises TypeError: if d is not an np.array of floats
         :raises ValueError: if relation between uk and d is wrong
         """
 
         if not issubclass(uk.dtype.type,float):
-            raise TypeError("uk must be an array of floats")
+            raise TypeError("uk must be an np.array of floats")
         if not issubclass(d.dtype.type,float):
-            raise TypeError("d must be an array of floats")       
+            raise TypeError("d must be an np.array of floats")       
         if len(uk) != d.shape[1]:
             raise ValueError("relation between uk and d is wrong")
         if uk.size < 3:
             raise ValueError("uk must at least contain 3 elements")
         if not (uk == sorted(uk)).all():
-            raise ValueError("uk must be a sorted array")
+            raise ValueError("uk must be a sorted np.array")
     
-        self.d = array(d,dtype='float')
-        self.uk = array(uk,dtype='float')
+        self.d = np.array(d,dtype='float')
+        self.uk = np.array(uk,dtype='float')
     
     def __call__(self,u):
         """
-        :param array.float u: array with all point where one wants to evaluate the spline
-        :raises TypeError: if u is not an array of floats
+        :param np.array.float u: np.array with all point where one wants to evaluate the spline
+        :raises TypeError: if u is not an np.array of floats
         :raises ValueError: if any value in u is outside boundaries of uk
-        :returns array.dim(2xn).floats Val: x and y values for the spline. x values in
+        :returns np.array.dim(2xn).floats Val: x and y values for the spline. x values in
                                     the first row and y values in the second.
         """
          
-        if type(u) != ndarray or type(u[0]) != float64:
-            raise TypeError('u must be an array of floats64.')
-        if max(u) > uk[-3] or min(u) < uk[2]:
+        if not issubclass(u.dtype.type,float):
+            raise TypeError("uk must be an np.array of floats")
+        if max(u) > self.uk[-3] or min(u) < self.uk[2]:
             raise ValueError('u is out of bounds.')
          
         n = len(u)
@@ -50,17 +51,17 @@ class Spline(object):
         :param float u: point where one wants to evaluate the spline
         :raises ValueError: if u is outside boundaries of uk
         :raises TypeError: if u is not a float
-        :returns array.dim(2x1).floats: x and y values for the spline. x values in
+        :returns np.array.dim(2x1).floats: x and y values for the spline. x values in
                                         the first row and y values in the second.
         """
-        if type(u) != float64:
-            raise TypeError('u must be of type float64.')
-        if max(u) > uk[-3] or min(u) < uk[2]:
+        if type(u) != float:
+            raise TypeError('u must be of type float')
+        if max(u) > self.uk[-3] or min(u) < self.uk[2]:
             raise ValueError('u is out of bounds.')
  
         def alpha(l, r):
-            p = uk[r]-u
-            q = uk[r]-uk[l]
+            p = self.uk[r]-u
+            q = self.uk[r]-self.uk[l]
             if q == 0:
                 return 0
             return p/q
@@ -68,19 +69,19 @@ class Spline(object):
         I = _findHotInterval(u)
  
         a7 = alpha(I-1, I+2)
-        d4 = a7*d[:, I-1]+(1-a7)*d[:, I]
+        d4 = a7*self.d[:, I-1]+(1-a7)*self.d[:, I]
          
         a6 = alpha(I-2, I+1)
-        d3 = a6*d[:, I-2]+(1-a6)*d[:, I-1]
+        d3 = a6*self.d[:, I-2]+(1-a6)*self.d[:, I-1]
          
         a5 = alpha(I-1, I+1)
         d1b = a5*d3+(1-a5)*d4
          
         a4 = alpha(I-2, I+1)
-        d2b = a4*d[:, I-2]+(1-a4)*d[:, I-1]
+        d2b = a4*self.d[:, I-2]+(1-a4)*self.d[:, I-1]
          
         a3 = alpha(I-3, I)
-        d2 = a3*d[:, I-3]+(1-a3)*d[:, I-2]
+        d2 = a3*self.d[:, I-3]+(1-a3)*self.d[:, I-2]
          
         a2 = alpha(I-2, I)
         d1 = a2*d2+(1-a2)*d2b
@@ -102,8 +103,7 @@ class Spline(object):
             raise TypeError("u must be a float")            
         if (u < self.uk[0]).any() or (u >= self.uk[-1]).any():
             raise ValueError("u is outside boundaries of uk")
-        sortUk=sort(self.uk)            
-        j = searchsorted(sortUk[1:],u)
+        j = np.searchsorted(self.uk[1:],u)
             
         return int(j)
 
@@ -114,8 +114,8 @@ class Spline(object):
         :param int numPoints: number of point where one wants to evaluate the spline
         :raises ValueError: if any value in u is outside boundaries of uk
         :raises TypeError: if uStart or uStop is not a float
-        :returns array.float u: array with all point where the spline has been evaluated
-        :returns array.dim(2xn).floats val: x and y values for the spline. x values in the first row and y values in the second.
+        :returns np.array.float u: np.array with all point where the spline has been evaluated
+        :returns np.array.dim(2xn).floats val: x and y values for the spline. x values in the first row and y values in the second.
         """
 
         if (uStart == None): uStart = float(self.uk[2])

@@ -48,7 +48,7 @@ class TestFindHotInterval:
 
 class TestCallMethod:
     def setUp(self):
-        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7]),np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]]))
+        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float64'))
     def tearDown(self):
         del self.testSpline
 
