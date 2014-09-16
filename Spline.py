@@ -23,7 +23,7 @@ class Spline(object):
         self.d = array(d,dtype='float')
         self.uk = array(uk,dtype='float')
     
-     def __call__(self,u): #Eli 
+    def __call__(self,u): #Eli 
         """
         :param array.float u: array with all point where one wants to evaluate the spline
         :raises TypeError: if u is not an array of floats
@@ -90,7 +90,7 @@ class Spline(object):
          
         return reshape(su,(2,1))
 
-    def _findHotIntervall(self,u) #Laubinot
+    def _findHotIntervall(self,u): #Laubinot
         """
         :param float u: point where one wants to find the hot intervall
         :raises ValueError: if u is outside boundaries of uk
