@@ -63,38 +63,53 @@ class Spline(object):
             raise TypeError('u must be of type float')
         if u > self.uk[-2] or u < self.uk[2]:
             raise ValueError('u is out of bounds.')
- 
-        def alpha(l, r):
-            p = self.uk[r]-u
-            q = self.uk[r]-self.uk[l]
-            if q == 0:
-                return 0
-            return p/q
-             
-        I = self._findHotInterval(u)
- 
-        a7 = alpha(I-1, I+2)
-        d4 = a7*self.d[:, I-1]+(1-a7)*self.d[:, I]
-         
-        a6 = alpha(I-2, I+1)
-        d3 = a6*self.d[:, I-2]+(1-a6)*self.d[:, I-1]
-         
-        a5 = alpha(I-1, I+1)
-        d1b = a5*d3+(1-a5)*d4
-         
-        a4 = alpha(I-2, I+1)
-        d2b = a4*self.d[:, I-2]+(1-a4)*self.d[:, I-1]
-         
-        a3 = alpha(I-3, I)
-        d2 = a3*self.d[:, I-3]+(1-a3)*self.d[:, I-2]
-         
-        a2 = alpha(I-2, I)
-        d1 = a2*d2+(1-a2)*d2b
-         
-        a1 = alpha(I-1, I)
-        su = a1*d1+(1-a1)*d1b
-         
-        return np.reshape(su,(2,1))
+
+        
+        index=self._findHotInterval(u)
+        #alpha = (uk[index] - u) / (uk[index] - uk[index+1])
+        #value = alpha * self._findD(u,index,index) + (1-alpha) * self._findD(u,index+1,index+1)
+        xValue = self._findD(u,index+1,index,0)
+        yValue = self._findD(u,index+1,index,1)        
+        
+        def _findD(self,u,leftMost,rightMost,coord):
+            if rightMost - leftMost == 2:
+                return self.d[leftMost,coord]
+            alpha = (self.uk[leftMost-1] - u)/(self.uk[rightMost+1] - self.uk[leftMost-1])
+            return alpha * self._findD(u,leftMost-1,rightMost) + (1 - alpha) * self._findD(u,leftMost,rightMost+1)
+            
+        return np.array([[xValue], [yValue]])
+# 
+#        def alpha(l, r):
+#            p = self.uk[r]-u
+#            q = self.uk[r]-self.uk[l]
+#            if q == 0:
+#                return 0
+#            return p/q
+#             
+#        I = self._findHotInterval(u)
+# 
+#        a7 = alpha(I-1, I+2)
+#        d4 = a7*self.d[:, I-1]+(1-a7)*self.d[:, I]
+#         
+#        a6 = alpha(I-2, I+1)
+#        d3 = a6*self.d[:, I-2]+(1-a6)*self.d[:, I-1]
+#         
+#        a5 = alpha(I-1, I+1)
+#        d1b = a5*d3+(1-a5)*d4
+#         
+#        a4 = alpha(I-2, I+1)
+#        d2b = a4*self.d[:, I-2]+(1-a4)*self.d[:, I-1]
+#         
+#        a3 = alpha(I-3, I)
+#        d2 = a3*self.d[:, I-3]+(1-a3)*self.d[:, I-2]
+#         
+#        a2 = alpha(I-2, I)
+#        d1 = a2*d2+(1-a2)*d2b
+#         
+#        a1 = alpha(I-1, I)
+#        su = a1*d1+(1-a1)*d1b
+# 
+#        return np.reshape(su,(2,1))
 
     def _findHotInterval(self,u):
         """
