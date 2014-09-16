@@ -55,8 +55,51 @@ def plot(self,uStart=uk[2],uStop=uk[-3]-kinds.default_float_kind.MIN*100,numPoin
 def getBaseFunc(self,j) #Hanna
 
 """
-    :param int j: index for base function, negative values are accepted
-    :returns function N: Base function
-    :raises TypeError: if j is not a integer
-    :raises ValueError: if j is outside uk
+:param int j: index for base function, negative values are accepted
+:returns function N: Base function
+:raises TypeError: if j is not a integer
+:raises ValueError: if j is outside uk
 """
+    uk=self.uk
+
+    if type(j) != int:
+        raise TypeError('j must be an integer value')
+
+    if j > len(uk)-2:
+        raise ValueError('j is out of bounds')
+
+    def N(u):
+        try:
+            index = _findHotIntervall(u)
+        except ValueError or TypeError:
+            raise
+    
+        if (index -j > 4) or (index < j):
+            nVal=0
+        elif (index - j == 3):
+            try :
+                nVal=(uk[j+4]-u)**3/((uk[j+4]-uk[j+1])*(uk[j+4]-uk[j+2])*(uk[j+4]-uk[j+3]))
+            except ZeroDivisionError:
+                nVal = 0
+        elif (index - j == 2):
+            try:
+                nVal = (u-uk[j])*(uk[j+3]-u)**2/((uk[j+3]-uk[j])*(uk[j+3]-uk[j+1])(uk[j+3-uk[j+2]]))
+                nVal += (uk[j+4] - u)*(u-uk[j+1])*(uk[j+3]-u)/((uk[j+4]-uk[j+1])*(uk[j+3]-uk[j+2])*(uk[j+3]-uk[j+2]))
+                nVal += (uk[j+4]-u)**2*(u-uk[j+2])/((uk[j+4]-uk[j+1])*(uk[j+4]-uk[j+2])*(uk[j+3]-uk[j+2]))
+            except ZeroDivisionError:
+                nVal = 0
+        elif (index - j == 1):
+            try:
+                nVal = (u-uk[j])**2*(uk[j+2]-u)/((uk[j+3]-uk[j])*(uk[j+2]-uk[j])*(uk[j+2]-uk[j+1]))
+                nVal += (u-uk[j])*(uk[j+3]-u)*(u-uk[j+1])/((uk[j+3]-uk[j])*(uk[j+3]-uk[j+1])*(uk[j+2]-uk[j+1]))
+                nVal += (uk[j+4]-u)*(u-uk[j+1])**2/((uk[j+4]-uk[j+1])*(uk[j+3]-uk[j+1])*(uk[j+2]-uk[j+1]))
+            except ZeroDivisionError:
+                nVal = 0
+        elif (index == j):
+            try:
+                nVal=(u-uk(j))**3/((uk[j+3]-uk[j])*(uk[j+2]-uk[j])*(uk[j+1]-uk[j]))
+            except ZeroDivisionError:
+                nVal = 0
+        return nVal
+        
+    return N
