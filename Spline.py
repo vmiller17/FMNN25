@@ -10,6 +10,8 @@ class Spline(object):
         :raises ValueError: if relation between uk and d is wrong
         """
 
+        if not isinstance(uk,np.ndarray):  
+            raise TypeError("uk must be a numpy array")
         if not issubclass(uk.dtype.type,float):
             raise TypeError("uk must be an np.array of floats")
         if not issubclass(d.dtype.type,float):
@@ -32,16 +34,17 @@ class Spline(object):
         :returns np.array.dim(2xn).floats Val: x and y values for the spline. x values in
                                     the first row and y values in the second.
         """
-         
+        if not isinstance(u,np.ndarray):  
+            raise TypeError("uk must be a numpy array")
         if not issubclass(u.dtype.type,float):
-            raise TypeError("uk must be an np.array of floats")
-        if max(u) > self.uk[-3] or min(u) < self.uk[2]:
+            raise TypeError("uk must contain floats")
+        if max(u) > self.uk[-2] or min(u) < self.uk[2]:
             raise ValueError('u is out of bounds.')
          
         n = len(u)
-        Val = zeros((2, n))
+        Val = np.zeros((2, n))
         for i in range(n):
-            tmp = _eval(u[i])
+            tmp = self._eval(u[i])
             Val[0, i] = tmp[0]
             Val[1, i] = tmp[1]
         return Val
@@ -54,9 +57,9 @@ class Spline(object):
         :returns np.array.dim(2x1).floats: x and y values for the spline. x values in
                                         the first row and y values in the second.
         """
-        if type(u) != float:
+        if not issubclass(type(u),float):
             raise TypeError('u must be of type float')
-        if max(u) > self.uk[-3] or min(u) < self.uk[2]:
+        if u > self.uk[-2] or u < self.uk[2]:
             raise ValueError('u is out of bounds.')
  
         def alpha(l, r):
@@ -66,7 +69,7 @@ class Spline(object):
                 return 0
             return p/q
              
-        I = _findHotInterval(u)
+        I = self._findHotInterval(u)
  
         a7 = alpha(I-1, I+2)
         d4 = a7*self.d[:, I-1]+(1-a7)*self.d[:, I]
@@ -89,7 +92,7 @@ class Spline(object):
         a1 = alpha(I-1, I)
         su = a1*d1+(1-a1)*d1b
          
-        return reshape(su,(2,1))
+        return np.reshape(su,(2,1))
 
     def _findHotInterval(self,u):
         """

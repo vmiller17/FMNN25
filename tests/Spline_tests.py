@@ -48,7 +48,7 @@ class TestFindHotInterval:
 
 class TestCallMethod:
     def setUp(self):
-        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float64'))
+        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-8,-6,-4,-2,2,4,6,8],[-8,-6,-4,-2,2,4,6,8]],dtype='float64'))
     def tearDown(self):
         del self.testSpline
 
@@ -69,11 +69,11 @@ class TestCallMethod:
         assert type(value) == np.ndarray
 
     def testReturnsFloats(self):
-        value = self.testSpline(np.array([3.5],dtype='float64'))
-        assert value.dtype == 'int64'
+        value = self.testSpline(np.array([3.5],dtype='float'))
+        assert issubclass(value.dtype.type,float)
 
     def testReturnsCorrectSize(self):
-        values = self.testSpline(np.array([1.75,3.5,5.25],dtype='float64'))
+        values = self.testSpline(np.array([2.625,3.5,4.375],dtype='float64'))
         assert values.shape == (2,3)
 
     def testEvaluateOnePoint(self):
@@ -82,20 +82,18 @@ class TestCallMethod:
         assert value[1,0] == 0
 
     def testEvaluateManyPoints(self):
-        values = self.testSpline(np.array([1.75,3.5,5.25],dtype='float64'))
-        assert values[0,0] == -3
-        assert values[1,0] == -3
+        values = self.testSpline(np.array([2.625,3.5,4.375],dtype='float64'))
+        assert values[0,0] == -2
+        assert values[1,0] == -2
         assert values[0,1] == 0
         assert values[1,1] == 0
-        assert values[0,2] == 3
-        assert values[1,2] == 3
+        assert values[0,2] == 2
+        assert values[1,2] == 2
         
 class TestEval:
 
     def setUp(self):
-        uk = np.array([0,1,2,3,4,5,6,7])
-        d = np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]])
-        self.testSpline = Spline.Spline(uk,d)
+        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-8,-6,-4,-2,2,4,6,8],[-8,-6,-4,-2,2,4,6,8]],dtype='float64'))
 
     def tearDown(self):
         del self.testSpline
@@ -109,11 +107,11 @@ class TestEval:
         self.testSpline._eval(1)
         
     def testOutputDimensions(self):
-        out = self.testSpline._eval(1.)
+        out = self.testSpline._eval(3.)
         assert (2,1) == out.shape
         
     def testOutputType(self):
-        out = self.testSpline._eval(1.)
+        out = self.testSpline._eval(3.)
         assert type(out) == np.ndarray        
         
         
