@@ -65,7 +65,7 @@ class Spline(object):
             raise ValueError('u is out of bounds.')
 
         
-        index=self._findHotIntervall(u)
+        index=self._findHotInterval(u)
         #alpha = (uk[index] - u) / (uk[index] - uk[index+1])
         #value = alpha * self._findD(u,index,index) + (1-alpha) * self._findD(u,index+1,index+1)
         xValue = self._findD(u,index+1,index,0)
