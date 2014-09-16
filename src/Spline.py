@@ -3,8 +3,12 @@ import sys
 import matplotlib.pyplot as plt
 class Spline(object):
     """ 
-    :param array uk: The knot vector containing all knot points :math:`\{u_i\}`. It must be an array of dimension (n,) which contains floats.
-    :param array d: The control point vector containing all control points :math:`\{\\textbf{d_i}\}` . It must be an array of dimension (2,n-2) which contains floats.
+    This class defines a cubic B spline object by using a knot vector :math:`\{u_i\}_0^K` and a series of control points :math:`\{\\textbf{d_i}\}_0^{K-2}`. The spline is representing a parametric curve in 2D and is defined on the interval :math:`u \in [u_2,u_{K-2})`.
+    
+    By supplying an array of floats with the shape (l,) an instance of this object may be called to evaluate all points inside this array.
+
+    :param array uk: The knot vector containing all knot points :math:`\{u_i\}_0^K`. It must be an array of dimension (n,) which contains floats.
+    :param array d: The control point vector containing all control points :math:`\{\\textbf{d_i}\}_0^{K-2}` . It must be an array of dimension (2,n-2) which contains floats.
     :raises TypeError: if **uk** is not an array of floats
     :raises TypeError: if **d** is not an array of floats
     :raises ValueError: if relation between **uk** and **d** is wrong
@@ -67,8 +71,6 @@ class Spline(object):
 
         
         index=self._findHotInterval(u)
-        #alpha = (uk[index] - u) / (uk[index] - uk[index+1])
-        #value = alpha * self._findD(u,index,index) + (1-alpha) * self._findD(u,index+1,index+1)
         xValue = self._findD(u,index+1,index,0)
         yValue = self._findD(u,index+1,index,1)        
 
@@ -101,10 +103,10 @@ class Spline(object):
         :param float uStart: Point where plotting starts. If none are chosen it starts in the first point where the spline is defined.
         :param float uStop: Point where plotting ends. If none are chosen it stops in the last point where the spline is defined.
         :param int numPoints: number of point where one wants to evaluate the spline
-        :raises ValueError: if any value in u is outside boundaries of uk
+        :raises ValueError: if uStart or uStop is not inside the definition of the spline
         :raises TypeError: if uStart or uStop is not a float
-        :returns np.array.float u: np.array with all point where the spline has been evaluated
-        :returns np.array.dim(2xn).floats val: x and y values for the spline. x values in the first row and y values in the second.
+        :returns: The x- and y-coordinates in an array with the shape (2,n). The upper row contains the x-coordinates and the lower contains the y-coordinates.
+        :rtype: array
         """
 
         if (uStart == None): uStart = float(self.uk[2])
@@ -127,10 +129,13 @@ class Spline(object):
     def getBaseFunc(self,j):
 
         """
-        :param int j: index for base function, negative values are accepted
-        :returns function N: Base function
+        This method returns the cubic base function :math:`N^3_j(u)`. This function is part of the base which makes up the spline: :math:`s(u) = \sum_{j=0}^{K-2}d_jN^3_j(x)`.
+
+        :param int j: index for base function, negative values are accepted and works as indeces for list type objects (e.g. j=-1 is the last base function).
+        :returns: The base function :math:`N^3_j`
+        :rtype: function
         :raises TypeError: if j is not a integer
-        :raises ValueError: if j is outside uk
+        :raises ValueError: if j is not an index for a base function
         """
         uk=self.uk
 
