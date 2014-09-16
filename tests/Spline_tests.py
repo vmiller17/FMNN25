@@ -100,7 +100,7 @@ class TestEval:
         
     @raises(ValueError)
     def testValueError(self):
-        self.testSpline._eval(3.)
+        self.testSpline._eval(1.)
         
     @raises(TypeError)
     def testTypeError(self):

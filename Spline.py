@@ -1,4 +1,6 @@
 import numpy as np
+import sys
+import matplotlib.pyplot as plt
 class Spline(object):
 
     def __init__(self,uk,d):
