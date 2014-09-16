@@ -107,8 +107,7 @@ class Spline
             
         return int(j)
 
-
-    def plot(self,uStart=uk[2],uStop=uk[-3]-kinds.default_float_kind.MIN*100,numPoints=1000): #FeelFree
+    def plot(self,uStart=None,uStop=None,numPoints=1000):
         """
         :param float uStart: point where ploting starts, default uk[2] 
         :param float uStop: point where ploting ends, default uk[2]
@@ -116,10 +115,25 @@ class Spline
         :raises ValueError: if any value in u is outside boundaries of uk
         :raises TypeError: if uStart or uStop is not a float
         :returns array.float u: array with all point where the spline has been evaluated
-        :returns array.dim(2xn).floats val: x and y values for the spline. x values in
-                                        the first row and y values in the second.
-
+        :returns array.dim(2xn).floats val: x and y values for the spline. x values in the first row and y values in the second.
         """
+
+        if (uStart == None): uStart = float(self.uk[2])
+        if (uStop == None): uStop = float(self.uk[-3]-sys.float_info.epsilon)
+
+        if (type(uStart) != float): raise TypeError('uStart is not a float')
+        if (type(uStop) != float): raise TypeError('uStop is not a float')
+
+        u_values = np.linspace(uStart,uStop,numPoints)
+        try:
+            coords = self.__call__(u_values)
+        except ValueError, e:
+            raise e
+
+        plt.plot(coords[0,:],coords[1,:])
+        plt.show()
+
+        return coords
 
     def getBaseFunc(self,j): #Hanna
 
