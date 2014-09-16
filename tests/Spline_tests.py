@@ -1,5 +1,5 @@
 import sys
-sys.path = sys.path + ['../']
+sys.path = sys.path + ['../src']
 from nose.tools import raises,with_setup
 import numpy as np
 import Spline
