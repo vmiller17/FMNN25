@@ -76,7 +76,7 @@ class Spline(object):
     def _findD(self,u,leftMost,rightMost,coord):
         if rightMost - leftMost == 2:
             return self.d[coord,leftMost]
-        alpha = (self.uk[leftMost-1] - u)/(self.uk[rightMost+1] - self.uk[leftMost-1])
+        alpha = (self.uk[rightMost+1] - u)/(self.uk[rightMost+1] - self.uk[leftMost-1])
         return alpha * self._findD(u,leftMost-1,rightMost,coord) + (1 - alpha) * self._findD(u,leftMost,rightMost+1,coord)
             
 # 
