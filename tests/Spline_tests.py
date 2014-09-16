@@ -121,3 +121,66 @@ class TestEval:
         out = self.testSpline._eval(3.5)
         assert out[0,0] == 0
         assert out[1,0] == 0
+
+class TestFindBaseFunc:
+
+    def setUp(self):
+        uk = np.array([0,1,2,3,4,5])
+        self.testSpline = Spline(uk,uk) #d is not used in this function
+
+    def TearDown(self):
+        del self.testSpline
+
+    @raises(TypeError)
+    def testTypeError(self):
+        j = 0.
+        self.testSpline.getBaseFunc(j)
+
+    @raises(ValueError)
+    def testValueError(self):
+        j = 5
+        self.testSpline.getBaseFunc(j)
+
+    @raises(ValueError)
+    def testValueErrorInIntervall(self):
+        j = 0
+        u = 6.
+        N = self.testSpline.getBaseFunc(j)
+        N(u)
+
+    @raises(TypeError)
+    def testTypeErrorInIntervall(self):
+        j = 0
+        u = 3
+        N = self.testSpline.getBaseFunc(j)
+        N(u)
+    
+    def testEvaluation1(self):
+        j = 0
+        u = 0.5
+        N = self.testSpline.getBaseFunc(j)
+        res = N(u)
+        assert np.isclose(res, 0.125 / 6)
+    
+    def testEvaluation2(self):
+        j = 0
+        u = 1.5
+        N = self.testSpline.getBaseFunc(j)
+        res = N(u)
+        assert np.isclose(res, 0.375 + (2.5 / 3) * (0.25 / 2))
+        
+    def testEvaluation3(self):
+        j = 0
+        u = 2.5
+        N = self.testSpline.getBaseFunc(j)
+        res = N(u)
+        assert np.isclose(res, 2.5 / 3 * 0.125 + 0.5 * 0.75)
+        
+    def testEvaluation4(self):
+        j = 0
+        u = 3.5
+        N = self.testSpline.getBaseFunc(j)
+        res = N(u)
+        assert np.isclose(res, 0.125 / 6)
+
+        

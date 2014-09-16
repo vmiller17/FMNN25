@@ -153,7 +153,7 @@ class Spline(object):
 
         def N(u):
             try:
-                index = _findHotInterval(u)
+                index = self._findHotInterval(u)
             except ValueError or TypeError:
                 raise
 
