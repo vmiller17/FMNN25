@@ -1,6 +1,6 @@
 class Spline(object):
 
-    def __init__(self,uk,d): #Labinot
+    def __init__(self,uk,d):
         """ 
         :param array.float uk: 
         :param array.float d:
@@ -23,7 +23,7 @@ class Spline(object):
         self.d = array(d,dtype='float')
         self.uk = array(uk,dtype='float')
     
-    def __call__(self,u): #Eli 
+    def __call__(self,u):
         """
         :param array.float u: array with all point where one wants to evaluate the spline
         :raises TypeError: if u is not an array of floats
@@ -45,7 +45,7 @@ class Spline(object):
             Val[1, i] = tmp[1]
         return Val
  
-    def _eval(self,u): #Eli
+    def _eval(self,u):
         """
         :param float u: point where one wants to evaluate the spline
         :raises ValueError: if u is outside boundaries of uk
@@ -65,7 +65,7 @@ class Spline(object):
                 return 0
             return p/q
              
-        I = _findHotInterval(u) # Observera stavningen.
+        I = _findHotInterval(u)
  
         a7 = alpha(I-1, I+2)
         d4 = a7*d[:, I-1]+(1-a7)*d[:, I]
@@ -90,7 +90,7 @@ class Spline(object):
          
         return reshape(su,(2,1))
 
-    def _findHotIntervall(self,u): #Laubinot
+    def _findHotInterval(self,u):
         """
         :param float u: point where one wants to find the hot intervall
         :raises ValueError: if u is outside boundaries of uk
@@ -107,8 +107,7 @@ class Spline(object):
             
         return int(j)
 
-
-    def plot(self,uStart=uk[2],uStop=uk[-3]-kinds.default_float_kind.MIN*100,numPoints=1000): #FeelFree
+    def plot(self,uStart=None,uStop=None,numPoints=1000):
         """
         :param float uStart: point where ploting starts, default uk[2] 
         :param float uStop: point where ploting ends, default uk[2]
@@ -116,12 +115,27 @@ class Spline(object):
         :raises ValueError: if any value in u is outside boundaries of uk
         :raises TypeError: if uStart or uStop is not a float
         :returns array.float u: array with all point where the spline has been evaluated
-        :returns array.dim(2xn).floats val: x and y values for the spline. x values in
-                                        the first row and y values in the second.
-
+        :returns array.dim(2xn).floats val: x and y values for the spline. x values in the first row and y values in the second.
         """
 
-    def getBaseFunc(self,j): #Hanna
+        if (uStart == None): uStart = float(self.uk[2])
+        if (uStop == None): uStop = float(self.uk[-3]-sys.float_info.epsilon)
+
+        if (type(uStart) != float): raise TypeError('uStart is not a float')
+        if (type(uStop) != float): raise TypeError('uStop is not a float')
+
+        u_values = np.linspace(uStart,uStop,numPoints)
+        try:
+            coords = self.__call__(u_values)
+        except ValueError, e:
+            raise e
+
+        plt.plot(coords[0,:],coords[1,:])
+        plt.show()
+
+        return coords
+
+    def getBaseFunc(self,j):
 
         """
         :param int j: index for base function, negative values are accepted
@@ -139,7 +153,7 @@ class Spline(object):
 
         def N(u):
             try:
-                index = _findHotIntervall(u)
+                index = _findHotInterval(u)
             except ValueError or TypeError:
                 raise
 

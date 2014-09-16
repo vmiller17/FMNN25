@@ -4,46 +4,46 @@ from nose.tools import raises,with_setup
 import numpy as np
 import Spline
 
-class TestFindHotIntervall:
+class TestFindHotInterval:
     def setUp(self):
-        self.testSpline = Spline.Spline(np.linspace(0,2),np.vstack((np.linspace(0,1,48),np.linspace(0,1,48))))
+        self.testSpline = Spline.Spline(np.linspace(0,2),np.vstack((np.linspace(0,1),np.linspace(0,1))))
 
     def tearDown(self):
         del self.testSpline
 
     #@with_setup(setupFunc,tearDownFunc)
     @raises(ValueError)
-    def testNotInIntervall(self):
-        self.testSpline._findHotIntervall(3.)
+    def testNotInInterval(self):
+        self.testSpline._findHotInterval(3.)
 
     #@with_setup(setupFunc,tearDownFunc)
     @raises(TypeError)
     def testNotFloatIn(self):
-        self.testSpline._findHotIntervall(1)
+        self.testSpline._findHotInterval(1)
 
     #@with_setup(setupFunc,tearDownFunc)
-    def testFindLeftmostIntervall(self):
-        j = self.testSpline._findHotIntervall(0)
+    def testFindLeftmostInterval(self):
+        j = self.testSpline._findHotInterval(0.)
         assert j == 0
 
     #@with_setup(setupFunc,tearDownFunc)
     @raises(ValueError)
-    def testRightEdgeNotPartOfIntervall(self):
-        j = self.testSpline._findHotIntervall(2.)
+    def testRightEdgeNotPartOfInterval(self):
+        j = self.testSpline._findHotInterval(2.)
 
     #@with_setup(setupFunc,tearDownFunc)
     def testReturnIsInt(self):
-        j = self.testSpline._findHotIntervall(1.)
+        j = self.testSpline._findHotInterval(1.)
         assert type(j) == int
 
     #@with_setup(setupFunc,tearDownFunc)
-    def testReturnsAllIntervalls(self):
-        testIntervalls = np.linspace(0,2.)
-        testIntervalls = testIntervalls + 0.02
+    def testReturnsAllIntervals(self):
+        testIntervals = np.linspace(0,2.)
+        testIntervals = testIntervals + 0.02
         j = 0
-        for i in testIntervalls[:-1]:
-            intervall = self.testSpline._findHotIntervall(i)
-            assert j == intervall
+        for i in testIntervals[:-1]:
+            Interval = self.testSpline._findHotInterval(i)
+            assert j == Interval
             j += 1
 
 class TestCallMethod:
@@ -61,7 +61,7 @@ class TestCallMethod:
         self.testSpline(np.array([1],dtype='int64'))
 
     @raises(ValueError)
-    def testNotInIntervall(self):
+    def testNotInInterval(self):
         self.testSpline(np.array([-1],dtype='float64'))
 
     def testReturnsArray(self):
