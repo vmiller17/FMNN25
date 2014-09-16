@@ -1,6 +1,6 @@
 class Spline(object):
 
-    def __init__(self,uk,d) #Labinot
+    def __init__(self,uk,d): #Labinot
         """ 
         :param array.float uk: 
         :param array.float d:
