@@ -123,8 +123,9 @@ class TestEval:
 class TestFindBaseFunc:
 
     def setUp(self):
-        uk = np.array([0,1,2,3,4,5])
-        self.testSpline = Spline(uk,uk) #d is not used in this function
+        uk = np.array([0,1,2,3,4,5],dtype='float')
+        d = np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float')
+        self.testSpline = Spline.Spline(uk,d) #d is not used in this function
 
     def TearDown(self):
         del self.testSpline
