@@ -80,39 +80,6 @@ class Spline(object):
         alpha = (self.uk[rightMost+1] - u)/(self.uk[rightMost+1] - self.uk[leftMost-1])
         return alpha * self._findD(u,leftMost-1,rightMost,coord) + (1 - alpha) * self._findD(u,leftMost,rightMost+1,coord)
             
-# 
-#        def alpha(l, r):
-#            p = self.uk[r]-u
-#            q = self.uk[r]-self.uk[l]
-#            if q == 0:
-#                return 0
-#            return p/q
-#             
-#        I = self._findHotInterval(u)
-# 
-#        a7 = alpha(I-1, I+2)
-#        d4 = a7*self.d[:, I-1]+(1-a7)*self.d[:, I]
-#         
-#        a6 = alpha(I-2, I+1)
-#        d3 = a6*self.d[:, I-2]+(1-a6)*self.d[:, I-1]
-#         
-#        a5 = alpha(I-1, I+1)
-#        d1b = a5*d3+(1-a5)*d4
-#         
-#        a4 = alpha(I-2, I+1)
-#        d2b = a4*self.d[:, I-2]+(1-a4)*self.d[:, I-1]
-#         
-#        a3 = alpha(I-3, I)
-#        d2 = a3*self.d[:, I-3]+(1-a3)*self.d[:, I-2]
-#         
-#        a2 = alpha(I-2, I)
-#        d1 = a2*d2+(1-a2)*d2b
-#         
-#        a1 = alpha(I-1, I)
-#        su = a1*d1+(1-a1)*d1b
-# 
-#        return np.reshape(su,(2,1))
-
     def _findHotInterval(self,u):
         """
         :param float u: point where one wants to find the hot intervall
@@ -131,8 +98,8 @@ class Spline(object):
 
     def plot(self,uStart=None,uStop=None,numPoints=1000):
         """
-        :param float uStart: point where ploting starts, default uk[2] 
-        :param float uStop: point where ploting ends, default uk[2]
+        :param float uStart: Point where plotting starts. If none are chosen it starts in the first point where the spline is defined.
+        :param float uStop: Point where plotting ends. If none are chosen it stops in the last point where the spline is defined.
         :param int numPoints: number of point where one wants to evaluate the spline
         :raises ValueError: if any value in u is outside boundaries of uk
         :raises TypeError: if uStart or uStop is not a float
