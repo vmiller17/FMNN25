@@ -1,14 +1,28 @@
 class Spline
 
-def __init__(self,uk,d) #Laubinot
-""" 
+def __init__(self,uk,d) #Labinot
+    """ 
     :param array.float uk: 
     :param array.float d:
     :raises TypeError: if uk is not an array of floats
     :raises TypeError: if d is not an array of floats
     :raises ValueError: if relation between uk and d is wrong
 
-"""
+    """
+    if not issubclass(uk.dtype.type,float):
+        raise TypeError("uk must be an array of floats")
+    if not issubclass(d.dtype.type,float):
+        raise TypeError("d must be an array of floats")       
+    if len(uk) != d.shape[1]:
+        raise ValueError("relation between uk and d is wrong")
+    if uk.size < 3:
+        raise ValueError("uk must at least contain 3 elements")
+    if not (uk == sorted(uk)).all():
+        raise ValueError("uk must be a sorted array")
+
+    self.d = array(d,dtype='float')
+    self.uk = array(uk,dtype='float')
+
     
 def __call__(self,u) #Eli  
 """ 
@@ -30,14 +44,24 @@ def _eval(self,u) #Eli
     
 """
 
-def _findHotIntervall(self,u) #Laubinot
-"""
+    def _findHotIntervall(self,u) #Laubinot
+    """
     :param float u: point where one wants to find the hot intervall
     :raises ValueError: if u is outside boundaries of uk
     :raises TypeError: if u is not a float
     :returns int j: index for the left side of the intervall
     
-"""
+    """
+
+        if not isinstance(u,float):
+            raise TypeError("u must be a float")            
+        if (u < self.uk[0]).any() or (u >= self.uk[-1]).any():
+            raise ValueError("u is outside boundaries of uk")
+        sortUk=sort(self.uk)            
+        j = searchsorted(sortUk[1:],u)
+            
+        return int(j)
+
 
 def plot(self,uStart=uk[2],uStop=uk[-3]-kinds.default_float_kind.MIN*100,numPoints=1000) #FeelFree
 """
