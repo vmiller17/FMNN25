@@ -23,24 +23,73 @@ class Spline
         self.d = array(d,dtype='float')
         self.uk = array(uk,dtype='float')
     
-    def __call__(self,u): #Eli  
-        """ 
+     def __call__(self,u): #Eli 
+        """
         :param array.float u: array with all point where one wants to evaluate the spline
         :raises TypeError: if u is not an array of floats
         :raises ValueError: if any value in u is outside boundaries of uk
-        :returns array.dim(2xn).floats Val: x and y values for the spline. x values in the first row and y values in the second.
-
+        :returns array.dim(2xn).floats Val: x and y values for the spline. x values in
+                                    the first row and y values in the second.
         """
-
+         
+        if type(u) != ndarray or type(u[0]) != float64:
+            raise TypeError('u must be an array of floats64.')
+        if max(u) > uk[-3] or min(u) < uk[2]:
+            raise ValueError('u is out of bounds.')
+         
+        n = len(u)
+        Val = zeros((2, n))
+        for i in range(n):
+            tmp = _eval(u[i])
+            Val[0, i] = tmp[0]
+            Val[1, i] = tmp[1]
+        return Val
+ 
     def _eval(self,u): #Eli
         """
         :param float u: point where one wants to evaluate the spline
         :raises ValueError: if u is outside boundaries of uk
         :raises TypeError: if u is not a float
         :returns array.dim(2x1).floats: x and y values for the spline. x values in
-                                    the first row and y values in the second.
-
+                                        the first row and y values in the second.
         """
+        if type(u) != float64:
+            raise TypeError('u must be of type float64.')
+        if max(u) > uk[-3] or min(u) < uk[2]:
+            raise ValueError('u is out of bounds.')
+ 
+        def alpha(l, r):
+            p = uk[r]-u
+            q = uk[r]-uk[l]
+            if q == 0:
+                return 0
+            return p/q
+             
+        I = _findHotInterval(u) # Observera stavningen.
+ 
+        a7 = alpha(I-1, I+2)
+        d4 = a7*d[:, I-1]+(1-a7)*d[:, I]
+         
+        a6 = alpha(I-2, I+1)
+        d3 = a6*d[:, I-2]+(1-a6)*d[:, I-1]
+         
+        a5 = alpha(I-1, I+1)
+        d1b = a5*d3+(1-a5)*d4
+         
+        a4 = alpha(I-2, I+1)
+        d2b = a4*d[:, I-2]+(1-a4)*d[:, I-1]
+         
+        a3 = alpha(I-3, I)
+        d2 = a3*d[:, I-3]+(1-a3)*d[:, I-2]
+         
+        a2 = alpha(I-2, I)
+        d1 = a2*d2+(1-a2)*d2b
+         
+        a1 = alpha(I-1, I)
+        su = a1*d1+(1-a1)*d1b
+         
+        return reshape(su,(2,1))
+
     def _findHotIntervall(self,u) #Laubinot
         """
         :param float u: point where one wants to find the hot intervall
