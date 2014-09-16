@@ -6,7 +6,7 @@ import Spline
 
 class TestFindHotInterval:
     def setUp(self):
-        self.testSpline = Spline.Spline(np.linspace(0,2),np.vstack((np.linspace(0,1),np.linspace(0,1))))
+        self.testSpline = Spline.Spline(np.linspace(0,2),np.vstack((np.linspace(0,1,48),np.linspace(0,1,48))))
 
     def tearDown(self):
         del self.testSpline
@@ -48,7 +48,7 @@ class TestFindHotInterval:
 
 class TestCallMethod:
     def setUp(self):
-        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-8,-6,-4,-2,2,4,6,8],[-8,-6,-4,-2,2,4,6,8]],dtype='float64'))
+        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float64'))
     def tearDown(self):
         del self.testSpline
 
@@ -93,7 +93,7 @@ class TestCallMethod:
 class TestEval:
 
     def setUp(self):
-        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-8,-6,-4,-2,2,4,6,8],[-8,-6,-4,-2,2,4,6,8]],dtype='float64'))
+        self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float64'))
 
     def tearDown(self):
         del self.testSpline
@@ -124,7 +124,7 @@ class TestFindBaseFunc:
 
     def setUp(self):
         uk = np.array([0,1,2,3,4,5],dtype='float')
-        d = np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float')
+        d = np.array([[-4,-2,2,4],[-4,-2,2,4]],dtype='float')
         self.testSpline = Spline.Spline(uk,d) #d is not used in this function
 
     def TearDown(self):

@@ -18,7 +18,7 @@ class Spline(object):
             raise TypeError("uk must be an np.array of floats")
         if not issubclass(d.dtype.type,float):
             raise TypeError("d must be an np.array of floats")       
-        if len(uk) != d.shape[1]:
+        if len(uk) != d.shape[1] + 2:
             raise ValueError("relation between uk and d is wrong")
         if uk.size < 3:
             raise ValueError("uk must at least contain 3 elements")
