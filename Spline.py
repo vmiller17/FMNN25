@@ -1,4 +1,4 @@
-class Spline
+class Spline(object):
 
     def __init__(self,uk,d) #Labinot
         """ 
