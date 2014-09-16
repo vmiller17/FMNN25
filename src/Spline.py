@@ -2,15 +2,16 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 class Spline(object):
+    """ 
+    :param array uk: The knot vector containing all knot points :math:`\{u_i\}`. It must be an array of dimension (n,) which contains floats.
+    :param array d: The control point vector containing all control points :math:`\{\\textbf{d_i}\}` . It must be an array of dimension (2,n-2) which contains floats.
+    :raises TypeError: if **uk** is not an array of floats
+    :raises TypeError: if **d** is not an array of floats
+    :raises ValueError: if relation between **uk** and **d** is wrong
+    :raises ValueError: if there are not enough elements (at least 6) in **uk**
+    """
 
     def __init__(self,uk,d):
-        """ 
-        :param np.array.float uk: 
-        :param np.array.float d:
-        :raises TypeError: if uk is not an np.array of floats
-        :raises TypeError: if d is not an np.array of floats
-        :raises ValueError: if relation between uk and d is wrong
-        """
 
         if not isinstance(uk,np.ndarray):  
             raise TypeError("uk must be a numpy array")
@@ -20,8 +21,8 @@ class Spline(object):
             raise TypeError("d must be an np.array of floats")       
         if len(uk) != d.shape[1] + 2:
             raise ValueError("relation between uk and d is wrong")
-        if uk.size < 3:
-            raise ValueError("uk must at least contain 3 elements")
+        if uk.size < 7:
+            raise ValueError("uk must at least contain 6 elements")
         if not (uk == sorted(uk)).all():
             raise ValueError("uk must be a sorted np.array")
     
