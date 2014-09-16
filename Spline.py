@@ -171,7 +171,7 @@ class Spline(object):
                     nVal = 0
             elif (index - j == 2):
                 try:
-                    nVal = (u-uk[j])*(uk[j+3]-u)**2/((uk[j+3]-uk[j])*(uk[j+3]-uk[j+1])(uk[j+3-uk[j+2]]))
+                    nVal = (u-uk[j])*(uk[j+3]-u)**2/((uk[j+3]-uk[j])*(uk[j+3]-uk[j+1])*(uk[j+3]-uk[j+2]))
                     nVal += (uk[j+4] - u)*(u-uk[j+1])*(uk[j+3]-u)/((uk[j+4]-uk[j+1])*(uk[j+3]-uk[j+2])*(uk[j+3]-uk[j+2]))
                     nVal += (uk[j+4]-u)**2*(u-uk[j+2])/((uk[j+4]-uk[j+1])*(uk[j+4]-uk[j+2])*(uk[j+3]-uk[j+2]))
                 except ZeroDivisionError:
@@ -185,7 +185,7 @@ class Spline(object):
                     nVal = 0
             elif (index == j):
                 try:
-                    nVal=(u-uk(j))**3/((uk[j+3]-uk[j])*(uk[j+2]-uk[j])*(uk[j+1]-uk[j]))
+                    nVal=(u-uk[j])**3/((uk[j+3]-uk[j])*(uk[j+2]-uk[j])*(uk[j+1]-uk[j]))
                 except ZeroDivisionError:
                     nVal = 0
             return nVal
