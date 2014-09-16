@@ -70,14 +70,15 @@ class Spline(object):
         #value = alpha * self._findD(u,index,index) + (1-alpha) * self._findD(u,index+1,index+1)
         xValue = self._findD(u,index+1,index,0)
         yValue = self._findD(u,index+1,index,1)        
-        
-        def _findD(self,u,leftMost,rightMost,coord):
-            if rightMost - leftMost == 2:
-                return self.d[leftMost,coord]
-            alpha = (self.uk[leftMost-1] - u)/(self.uk[rightMost+1] - self.uk[leftMost-1])
-            return alpha * self._findD(u,leftMost-1,rightMost) + (1 - alpha) * self._findD(u,leftMost,rightMost+1)
-            
+
         return np.array([[xValue], [yValue]])
+        
+    def _findD(self,u,leftMost,rightMost,coord):
+        if rightMost - leftMost == 2:
+            return self.d[coord,leftMost]
+        alpha = (self.uk[leftMost-1] - u)/(self.uk[rightMost+1] - self.uk[leftMost-1])
+        return alpha * self._findD(u,leftMost-1,rightMost,coord) + (1 - alpha) * self._findD(u,leftMost,rightMost+1,coord)
+            
 # 
 #        def alpha(l, r):
 #            p = self.uk[r]-u
