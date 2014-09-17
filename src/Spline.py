@@ -20,18 +20,22 @@ class Spline(object):
         if not isinstance(uk,np.ndarray):  
             raise TypeError("uk must be a numpy array")
         if not issubclass(uk.dtype.type,float):
-            raise TypeError("uk must be an np.array of floats")
+            raise TypeError("uk must be an array of floats")
         if not issubclass(d.dtype.type,float):
-            raise TypeError("d must be an np.array of floats")       
+            raise TypeError("d must be an array of floats")       
         if len(uk) != d.shape[1] + 2:
             raise ValueError("relation between uk and d is wrong")
-        if uk.size < 7:
+        if d.ndim != 2:
+            raise ValueError("d is not a two dimensional array")
+        if d.shape[0] != 2:
+            raise ValueError("d does not have two rows")
+        if uk.size < 6:
             raise ValueError("uk must at least contain 6 elements")
         if not (uk == sorted(uk)).all():
-            raise ValueError("uk must be a sorted np.array")
+            raise ValueError("uk must be a sorted array")
     
-        self.d = np.array(d,dtype='float')
-        self.uk = np.array(uk,dtype='float')
+        self.d = d
+        self.uk = uk
     
     def __call__(self,u):
         """
