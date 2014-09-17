@@ -31,7 +31,7 @@ class Spline(object):
             raise ValueError("d does not have two rows")
         if uk.size < 6:
             raise ValueError("uk must at least contain 6 elements")
-        if not (uk == sorted(uk)).all():
+        if not (uk[1:]-uk[:-1] >= 0).all():
             raise ValueError("uk must be a sorted array")
     
         self.d = d
