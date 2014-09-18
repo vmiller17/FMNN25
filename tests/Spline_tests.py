@@ -46,6 +46,11 @@ class TestFindHotInterval:
             assert j == Interval
             j += 1
 
+    def testOverlappingKnotPoints(self):
+        self.testSpline = Spline.Spline(np.array([0,1,2,2,2,2,6,7],dtype='float64'),np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float64'))
+        assert self.testSpline._findHotInterval(3.) == 5
+
+
 class TestCallMethod:
     def setUp(self):
         self.testSpline = Spline.Spline(np.array([0,1,2,3,4,5,6,7],dtype='float64'),np.array([[-6,-4,-2,2,4,6],[-6,-4,-2,2,4,6]],dtype='float64'))
