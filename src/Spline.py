@@ -96,7 +96,7 @@ class Spline(object):
 
         if not isinstance(u,float):
             raise TypeError("u must be a float")            
-        if (u < self.uk[0]).any() or (u >= self.uk[-1]).any():
+        if u < self.uk[0] or u > self.uk[-1]:
             raise ValueError("u is outside boundaries of uk")
         j = np.searchsorted(self.uk[1:],u)
             
@@ -125,7 +125,8 @@ class Spline(object):
         except ValueError, e:
             raise e
 
-        plt.plot(coords[0,:],coords[1,:])
+        plt.plot(coords[0,:],coords[1,:],'b')
+        plt.plot(self.d[0,:],self.d[1,:],'r--o')
         plt.show()
 
         return coords
